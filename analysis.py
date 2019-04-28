@@ -115,7 +115,9 @@ while 1:
 
         cur = conn.cursor()
         cur.execute("INSERT INTO problem (problem, answer, tags) VALUES (%s, %s, %s)", (problem, answer, returnTag))
-
+        cur.execute("SELECT aid FROM problem WHERE problem = %s", (problem,))
+        curID = cur.fetchone()[0]
+        cur.execute("UPDATE transfer SET aid = %s, problem = %s WHERE aid = %s", (curID, problem, curID-1))
         # toggle question state back to false (question is submitted)
         cur = conn.cursor()
         cur.execute("UPDATE updates SET qs1 = %s WHERE id = %s", ("false", "1"))
